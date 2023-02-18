@@ -14,11 +14,13 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.5
 
-  super_localizations:
-    git:
-      url: https://github.com/widespace-ye/super-localizations.git
 
+  # remote
+  dio: ^4.0.6
+  connectivity_plus: ^3.0.2
 
+  # local
+  get_storage: ^2.0.3
 
 dev_dependencies:
   flutter_test:
