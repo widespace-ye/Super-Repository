@@ -30,14 +30,14 @@ class SuperRepository {
 
   static DataProvider get provider => DataProvider.instance;
 
+  Map<String, dynamic> defaultHeader = {};
+
   /// This is the initialization of the main class of Wings framework
   /// and it should be called before runApp() is called
   static Future<void> initialize() async {
     _instance ??= SuperRepository();
     await DataProvider.init();
   }
-
-  Map<String, dynamic> defaultHeader = {};
 
   Future<dynamic> getData({
     required Request request,
@@ -47,36 +47,7 @@ class SuperRepository {
     try {
       var response =
           await provider.get(request: request, shouldCache: shouldCache);
-
-      // if (provider.error.message.isNotEmpty) {
-      // throw provider.error.exception.runtimeType ==
-      //     Exceptions.fromEnumeration(ExceptionTypes.empty).runtimeType
-      //     ? (emptyException ?? provider.error)
-      //     : provider.error;
-      // }
-
-      // if (response['data'] == null || response['data'].isEmpty) {
-      //   if (response['status'] ?? true) {
-      //     return response["message"];
-      //   } else {
-      //     throw response["message"];
-      //   }
-      // } else {
-
-      if (model != null) {
-        response = response['data'];
-
-        if (response is List) {
-          return model.fromJsonList(response);
-        } else if (response is Map<String, dynamic>) {
-          return model.fromJson(response);
-        } else {
-          return response;
-        }
-      } else {
-        return response;
-      }
-      // }
+      return await responseFormat(response, model);
     } catch (_) {
       rethrow;
     }
@@ -90,31 +61,26 @@ class SuperRepository {
     try {
       var response =
           await provider.insert(request: request, shouldCache: shouldCache);
-
-      if (!(response['status'] ?? true)) throw response["message"];
-
-      if (response['data'] == null || response['data'].isEmpty) {
-        if (response['status'] ?? true) {
-          return response["message"];
-        } else {
-          throw response["message"];
-        }
-      } else {
-        response = response['data'];
-        if (model != null) {
-          if (response is List) {
-            return model.fromJsonList(response);
-          } else if (response is Map<String, dynamic>) {
-            return model.fromJson(response);
-          } else {
-            return response;
-          }
-        } else {
-          return response;
-        }
-      }
+      return await responseFormat(response, model);
     } catch (_) {
       rethrow;
+    }
+  }
+
+  Future<dynamic> responseFormat(dynamic response, BaseModel? model) async {
+    if (model == null) return response;
+
+    if (!(response['success'] ?? true)) throw response['message'];
+
+    response = response['data'];
+    if (response == null || response.isEmpty) return response['message'];
+
+    if (response is List) {
+      return model.fromJsonList(response);
+    } else if (response is Map<String, dynamic>) {
+      return model.fromJson(response);
+    } else {
+      return response;
     }
   }
 }
