@@ -16,11 +16,8 @@ dependencies:
 
   super_localizations:
     git:
-      url: https://github.com/Abdullah-AlWajih/super-localizations.git
+      url: https://github.com/widespace-ye/super-localizations.git
 
-  super_repository:
-    git:
-      url: https://github.com/Abdullah-AlWajih/super-repository.git
 
 
 dev_dependencies:
