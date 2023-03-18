@@ -29,11 +29,13 @@ class NetworkManager {
   }
 
   Future<void> _updateState(ConnectivityResult result) async {
-    if (result != ConnectivityResult.none) {
-      _hasConnection = await checkUserConnection();
-    } else {
-      _hasConnection = false;
-    }
+//     if (result != ConnectivityResult.none) {
+//       _hasConnection = await checkUserConnection();
+//     } else {
+//       _hasConnection = false;
+//     }
+          _hasConnection = await checkUserConnection();
+
     if (!_hasConnection) {
       throw Exceptions.fromEnumeration(ExceptionTypes.connection);
     }
